@@ -10,7 +10,6 @@ router.post("/lauch",async(req,res)=>{
 
     try {
         await moodle.validarRequest(req);
-
         // Aquí puedes guardar el provider en sesión, base de datos, etc.
 
         res.send("✔️ LTI Launch válido");
