@@ -21,10 +21,15 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@types/cookie-parser": "^1.4.9",
+    "@types/express-session": "^1.18.2",
+    "@types/jsonwebtoken": "^9.0.10",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "ims-lti": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
     "path": "^0.12.7",
     "tsconfig-paths": "^4.2.0"
   }
