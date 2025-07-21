@@ -2,30 +2,45 @@
 import lti from 'ims-lti'
 
 
-// Cambia esto por lo que pongas en Moodle
-const CONSUMER_KEY = 'mi-clave';
-const CONSUMER_SECRET = 'mi-secreto';
+export class MoodleConexion {
+    private provider: any;
 
-const outcome = new lti.OutcomeService({
-    consumer_key: CONSUMER_KEY,
-    consumer_secret: CONSUMER_SECRET,
-    service_url: req.body.url,
-    source_did: req.body.sourcedid
-});
+    constructor() {
+        this.provider = new lti.Provider(
+            process.env.CONSUMER_KEY!,
+            process.env.CONSUMER_SECRET!
+        );
+    }
 
+    async validarRequest(req: any): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.provider.valid_request(req, (err: any, isValid: boolean) => {
+                if (err || !isValid) {
+                    return reject(new Error("Invalid launch request!"));
+                }
+                resolve();
+            });
+        });
+    }
 
-interface SendGradeProps {
-    grade: number,
-    
-}
-const sendGrade = ({}) => {
+    getOutcomeService(): any {
+        return this.provider.outcome_service;
+    }
 
-    outcome.send_replace_result('0.85', (err, result) => {
-        if (err) {
-            return res.status(500).send('Error enviando calificación');
+    async enviarNota(nota: number): Promise<void> {
+        const outcomeService = this.getOutcomeService();
+
+        if (!outcomeService) {
+            throw new Error("No outcome service available.");
         }
-        res.send('✅ Calificación enviada correctamente');
-    });
-}
 
-export const ltiProvider = new lti.Provider(CONSUMER_KEY, CONSUMER_SECRET);
+        return new Promise((resolve, reject) => {
+            outcomeService.send_replace_result(nota, (err: any, _result: any) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve();
+            });
+        });
+    }
+}
