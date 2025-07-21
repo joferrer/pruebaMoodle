@@ -3,8 +3,10 @@ import { MoodleConexion} from "@moodle/config"
 
 export const router = Router()
 
+const moodle = new MoodleConexion();
+
 router.post("/lauch",async(req,res)=>{
-    const moodle = new MoodleConexion();
+   
 
     try {
         await moodle.validarRequest(req);
@@ -20,7 +22,6 @@ router.post("/lauch",async(req,res)=>{
 
 router.post('/evaluar',async(req,res)=>{
 
-    const moodle = new MoodleConexion();
 
     try {
         const {suma} = req.body

@@ -1,14 +1,14 @@
 // @ts-ignore
 import lti from 'ims-lti'
-
+import {variables} from '@variables/variables'
 
 export class MoodleConexion {
     private provider: any;
 
     constructor() {
         this.provider = new lti.Provider(
-            process.env.CONSUMER_KEY!,
-            process.env.CONSUMER_SECRET!
+            variables.CONSUMER_KEY!,
+            variables.CONSUMER_SECRET!
         );
     }
 
