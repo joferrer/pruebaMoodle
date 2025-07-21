@@ -5,6 +5,17 @@ import {variables} from '@variables/variables'
 interface LTIRequest extends Express.Request {
     body: any;
 }
+interface LTIData {
+    user_id: string;
+    context_id: string;
+    resource_link_id: string;
+    lis_outcome_service_url?: string;
+    lis_result_sourcedid?: string;
+    context_title?: string;
+    user_email?: string;
+    user_name?: string;
+    custom_params?: Record<string, any>;
+}
 
 
 export class MoodleConexion {
@@ -57,20 +68,39 @@ export class MoodleConexion {
         return customParams;
     }
 
-    async enviarNota(nota: number): Promise<void> {
-        const outcomeService = this.getOutcomeService();
-
-        if (!outcomeService) {
-            throw new Error("No outcome service available.");
-        }
+   async enviarNota(nota: number, ltiData: LTIData): Promise<void> {
+        const outcomeService = new lti.OutcomeService({
+            service_url: ltiData.lis_outcome_service_url,
+            source_did: ltiData.lis_result_sourcedid,
+            consumer_key: variables.CONSUMER_KEY!,
+            consumer_secret: variables.CONSUMER_SECRET!
+        });
 
         return new Promise((resolve, reject) => {
-            outcomeService.send_replace_result(nota, (err: any, _result: any) => {
+            outcomeService.send_replace_result(nota, (err: any, result: any) => {
                 if (err) {
-                    return reject(err);
+                    console.error('Error enviando nota:', err);
+                    return reject(new Error('Error al enviar nota a Moodle'));
                 }
+                console.log('Nota enviada exitosamente:', result);
                 resolve();
             });
         });
+    }
+
+     validarIntegridadDatos(ltiData: LTIData): boolean {
+        // Verificar campos obligatorios
+        if (!ltiData.user_id || !ltiData.context_id || !ltiData.resource_link_id) {
+            console.error('Faltan campos obligatorios en LTI data');
+            return false;
+        }
+
+        // Verificar que podemos enviar calificaciones si es necesario
+        if (!ltiData.lis_outcome_service_url || !ltiData.lis_result_sourcedid) {
+            console.warn('Los datos LTI no soportan envío de calificaciones');
+        }
+
+        console.log('Datos LTI válidos para usuario:', ltiData.user_id);
+        return true;
     }
 }
