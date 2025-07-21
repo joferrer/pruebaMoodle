@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "node -r tsconfig-paths/register build/index.js",
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,7 +17,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "ts-node-dev": "^2.0.0",
-    "tsconfig-paths": "^4.2.0",
+    "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "ims-lti": "^3.0.2",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "tsconfig-paths": "^4.2.0"
   }
 }
