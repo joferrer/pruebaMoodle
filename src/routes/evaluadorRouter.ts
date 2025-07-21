@@ -89,7 +89,7 @@ router.post('/evaluar', requireLTI ,async (req: Request, res) => {
 
         const { suma } = req.body
         console.log(`${suma}`)
-        const nota = suma == 2 ? 100 : 0
+        const nota = suma == 2 ? 1 : 0
 
          // Validar integridad de los datos LTI guardados
         const moodle = new MoodleConexion();
@@ -112,7 +112,8 @@ router.post('/evaluar', requireLTI ,async (req: Request, res) => {
     } catch (err) {
         console.error('Error calificando:', err);
         return res.status(500).json({ 
-            error: "Error interno al procesar calificación" 
+            error: "Error interno al procesar calificación" ,
+            err
         });
     }
 })
