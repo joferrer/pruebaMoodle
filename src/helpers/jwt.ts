@@ -1,29 +1,17 @@
 import { variables } from '@/envs/variables';
 import jwt from 'jsonwebtoken';
-
-interface LTIData {
-    user_id: string;
-    context_id: string;
-    resource_link_id: string;
-    lis_outcome_service_url?: string;
-    lis_result_sourcedid?: string;
-    context_title?: string;
-    user_email?: string;
-    user_name?: string;
-    custom_params?: Record<string, any>;
-}
+import { ILTIData  } from '@/types/lti'; 
 
 const JWT_SECRET = variables.JWT_SECRET ?? "";
 
 
-export function crearTokenLTI(ltiData: LTIData): string {
-    
+export function crearTokenLTI(ltiData: ILTIData): string {
     return jwt.sign(ltiData, JWT_SECRET, { expiresIn: '24h' });
 }
 
-export function validarTokenLTI(token: string): LTIData | null {
+export function validarTokenLTI(token: string): ILTIData | null {
     try {
-        return jwt.verify(token, JWT_SECRET) as LTIData;
+        return jwt.verify(token, JWT_SECRET) as ILTIData;
     } catch (error) {
         console.error('Token JWT inválido:', error);
         return null;

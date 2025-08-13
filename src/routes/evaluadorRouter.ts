@@ -1,19 +1,8 @@
 import { Router, Request ,Response } from "express";
 import { MoodleConexion } from "@moodle/config"
 import { crearTokenLTI, validarTokenLTI } from "@/helpers/jwt";
+import { ILTIData as LTIData } from "@/types"; 
 
-
-interface LTIData {
-    user_id: string;
-    context_id: string;
-    resource_link_id: string;
-    lis_outcome_service_url?: string;
-    lis_result_sourcedid?: string;
-    context_title?: string;
-    user_email?: string;
-    user_name?: string;
-    custom_params?: Record<string, any>;
-}
 
 export const router = Router()
 
@@ -41,7 +30,7 @@ function requireLTI(req: Request, res: Response, next: any) {
     return;
 }
 
-
+//TODO: Adaptar para que reciba que prueba se lanza.
 router.post("/launch", async (req: Request, res) => {
 
     const moodle = new MoodleConexion();
@@ -49,7 +38,6 @@ router.post("/launch", async (req: Request, res) => {
         await moodle.validarRequest(req);
 
         const ltiData = moodle.extraerDatosLTI(req);
-
         const token = crearTokenLTI(ltiData);
 
         res.cookie('lti_token', token, {
@@ -58,7 +46,7 @@ router.post("/launch", async (req: Request, res) => {
             maxAge: 24 * 60 * 60 * 1000  // 24 horas
         });
 
-        res.redirect("/");
+        res.redirect("/"); //TODO: Redirigir en base a que prueba se quiere lanzar.
     } catch (err) {
         res.status(401).send("❌ LTI Launch inválido");
     }
