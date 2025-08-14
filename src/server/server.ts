@@ -5,7 +5,9 @@ import cors from 'cors';
 import path from 'path';
 import { config } from 'dotenv';
 
-//import { router as pinRouter  } from '../servicios/pin/pinroutes'; // Asegúrate de que la ruta sea correcta
+import { variablesM } from '@variables/variables';
+
+
 import { router as evaluadorRouter } from '@routes/evaluadorRouter';
 
 config(); // Cargar variables de entorno desde el archivo .env
@@ -16,8 +18,8 @@ class Server {
 
 
     constructor() {
-
-        this.port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+        const portEnv = variablesM.PORT ;
+        this.port = portEnv ? parseInt(portEnv) : 3000;
         this.app = express();
 
     }
