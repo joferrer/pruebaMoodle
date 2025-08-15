@@ -5,7 +5,7 @@ import cors from 'cors';
 import path from 'path';
 import { config } from 'dotenv';
 
-import { variablesM } from '@variables/variables';
+import { variables } from '@variables/variables';
 
 
 import { router as evaluadorRouter } from '@routes/evaluadorRouter';
@@ -18,7 +18,7 @@ class Server {
 
 
     constructor() {
-        const portEnv = variablesM.PORT ;
+        const portEnv = variables.PORT ;
         this.port = portEnv ? parseInt(portEnv) : 3000;
         this.app = express();
 

@@ -1,7 +1,8 @@
-import { Router, Request ,Response } from "express";
+import { Router, Request, Response } from "express";
 import { MoodleConexion } from "@moodle/config"
 import { crearTokenLTI, validarTokenLTI } from "@/helpers/jwt";
-import { ILTIData as LTIData } from "@/types"; 
+import { ILTIData as LTIData } from "@/types";
+import { GeminiModel , CodeReviewModel} from "@/iamodel";
 
 
 export const router = Router()
@@ -9,21 +10,21 @@ export const router = Router()
 // Middleware para validar token LTI
 function requireLTI(req: Request, res: Response, next: any) {
     const token = req.cookies.lti_token;
-    
+
     if (!token) {
-        return res.status(401).json({ 
-            error: "No hay token LTI válido" 
+        return res.status(401).json({
+            error: "No hay token LTI válido"
         });
     }
-    
+
     const ltiData = validarTokenLTI(token);
-    
+
     if (!ltiData) {
-        return res.status(401).json({ 
-            error: "Token LTI inválido o expirado" 
+        return res.status(401).json({
+            error: "Token LTI inválido o expirado"
         });
     }
-    
+
     // Agregar datos LTI al request para usarlos en la ruta
     (req as any).ltiData = ltiData;
     next();
@@ -69,29 +70,29 @@ router.post('/prueba', async (req, res) => {
 
 })
 
-router.post('/evaluar', requireLTI ,async (req: Request, res) => {
+router.post('/evaluar', requireLTI, async (req: Request, res) => {
 
     try {
 
-         const ltiData = (req as any).ltiData as LTIData;
+        const ltiData = (req as any).ltiData as LTIData;
 
         const { suma } = req.body
         console.log(`${suma}`)
         const nota = suma == 2 ? 1 : 0
 
-         // Validar integridad de los datos LTI guardados
+        // Validar integridad de los datos LTI guardados
         const moodle = new MoodleConexion();
         if (!moodle.validarIntegridadDatos(ltiData)) {
-            return res.status(400).json({ 
-                error: "Datos LTI incompletos o inválidos" 
+            return res.status(400).json({
+                error: "Datos LTI incompletos o inválidos"
             });
         }
 
-        await moodle.enviarNota(nota,ltiData);
+        await moodle.enviarNota(nota, ltiData);
         console.log(`Nota ${nota} enviada para usuario ${ltiData.user_id}`);
-        
-        return res.json({ 
-            success: true, 
+
+        return res.json({
+            success: true,
             message: "Calificación enviada exitosamente",
             usuario: ltiData.user_name,
             nota: nota
@@ -99,9 +100,32 @@ router.post('/evaluar', requireLTI ,async (req: Request, res) => {
 
     } catch (err) {
         console.error('Error calificando:', err);
-        return res.status(500).json({ 
-            error: "Error interno al procesar calificación" ,
+        return res.status(500).json({
+            error: "Error interno al procesar calificación",
             err
+        });
+    }
+})
+
+router.get('/pruebaModelo', async (_req, res) => {
+
+    const prompt = `
+    #include <iostream>
+    using namespace std;
+    int main() {
+        cout << 'Hello, World!' << endl; 
+        return 0;
+}
+           `
+    const modelo = new CodeReviewModel(new GeminiModel())
+    try {
+        const response = await modelo.generateResponse(prompt);
+        return res.json(response);
+    } catch (error) {
+        console.error('Error al generar respuesta del modelo:', error);
+        return res.status(500).json({
+            error: "Error al generar respuesta del modelo",
+            details: error
         });
     }
 })

@@ -21,6 +21,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@google/genai": "^1.14.0",
     "@types/cookie-parser": "^1.4.9",
     "@types/express-session": "^1.18.2",
     "@types/jsonwebtoken": "^9.0.10",
@@ -30,6 +31,7 @@
     "express": "^5.1.0",
     "ims-lti": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
+    "openai": "^5.12.2",
     "path": "^0.12.7",
     "tsconfig-paths": "^4.2.0"
   }

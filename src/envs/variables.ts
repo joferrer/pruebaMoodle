@@ -1,18 +1,23 @@
 
+import { EnvVariables } from '@/types';
 import { config } from 'dotenv';
 
 config();
 
 class EnvManager {
-    private variables: { [key: string]: string };
+    private variables: EnvVariables;
 
     constructor(){
+        //TODO: Pueden haber más modelos, no debería ser obligatoria la apiKey de ningún modelo, pero si debe haber uno al menos.
         this.variables = {
+            PORT: process.env.PORT || '3000' ,
             CONSUMER_KEY: this.requireEnv('CONSUMER_KEY'),
             CONSUMER_SECRET: this.requireEnv('CONSUMER_SECRET'),
             JWT_SECRET: this.requireEnv('JWT_SECRET'),
-            PORT: process.env.PORT || '3000' ,
-           
+            DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY || '',
+            OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
+            GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+
         };
     }
     requireEnv(name: string): string {
@@ -22,16 +27,9 @@ class EnvManager {
         }
         return value;
     }
-    getVariables(): { [key: string]: string } {
+    getVariables(): EnvVariables {
         return this.variables;
     }
 }
 
-export const variablesM = new EnvManager().getVariables();
-
-export const variables = {
-    CONSUMER_KEY: process.env.CONSUMER_KEY,
-    CONSUMER_SECRET: process.env.CONSUMER_SECRET,
-    JWT_SECRET: process.env.JWT_SECRET
-}
-
+export const variables = new EnvManager().getVariables();

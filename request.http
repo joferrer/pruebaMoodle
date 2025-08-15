@@ -1,0 +1,7 @@
+### Verificar PIN prod
+POST http://localhost:3000/api/launch HTTP/1.1
+content-type: application/json
+
+
+### Prueba del modelo DeepSeek
+GET http://localhost:3000/api/pruebaModelo HTTP/1.1
