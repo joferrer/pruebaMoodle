@@ -32,6 +32,7 @@ function requireLTI(req: Request, res: Response, next: any) {
 }
 
 //TODO: Adaptar para que reciba que prueba se lanza.
+//TODO: Hacer que el endpoint reciba que prueba se lanza.
 router.post("/launch", async (req: Request, res) => {
 
     const moodle = new MoodleConexion();
@@ -107,8 +108,11 @@ router.post('/evaluar', requireLTI, async (req: Request, res) => {
     }
 })
 
+//TODO: Hacer el endpoint que resiba el código y lo evalúe con el modelo de IA
+//TODO: Definir si se se puede cambiar el modelo de IA a usar.
 router.get('/pruebaModelo', async (_req, res) => {
 
+    
     const prompt = `
     #include <iostream>
     using namespace std;

@@ -1,14 +1,26 @@
 
 import { EnvVariables } from '@/types';
 import { config } from 'dotenv';
+import { errors } from '@/types';
 
 config();
 
+interface Models_avaliables{
+    OPENAI: boolean,
+    DEEPSEEK: boolean,
+    GEMINI: boolean
+}
+
 class EnvManager {
     private variables: EnvVariables;
+    public models: Models_avaliables = {
+        OPENAI: process.env.OPENAI_API_KEY ? true : false,
+        DEEPSEEK: process.env.DEEPSEEK_API_KEY ? true : false,
+        GEMINI: process.env.GEMINI_API_KEY ? true : false
+    }
 
     constructor(){
-        //TODO: Pueden haber más modelos, no debería ser obligatoria la apiKey de ningún modelo, pero si debe haber uno al menos.
+        
         this.variables = {
             PORT: process.env.PORT || '3000' ,
             CONSUMER_KEY: this.requireEnv('CONSUMER_KEY'),
@@ -17,16 +29,23 @@ class EnvManager {
             DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY || '',
             OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
             GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
-
         };
+        if (!this.verifyModels()) {
+            throw new Error(errors.NO_AI_MODELS_CONFIGURED);
+        }
     }
     requireEnv(name: string): string {
         const value = process.env[name];
         if (!value) {
-            throw new Error(`Falta la variable de entorno: ${name}`);
+            throw new Error(`${errors.MISSING_ENV_VARIABLE} ${name}`);
         }
         return value;
     }
+
+    verifyModels(): boolean {
+        return Object.values(this.models).some(model => model);
+    }
+
     getVariables(): EnvVariables {
         return this.variables;
     }
