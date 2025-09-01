@@ -49,6 +49,10 @@ class EnvManager {
     getVariables(): EnvVariables {
         return this.variables;
     }
+
+    getModelsAvaliables(): Models_avaliables {
+        return this.models;
+    }
 }
 
 export const variables = new EnvManager().getVariables();

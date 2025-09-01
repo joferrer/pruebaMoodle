@@ -6,7 +6,7 @@ const JWT_SECRET = variables.JWT_SECRET ?? "";
 
 
 export function crearTokenLTI(ltiData: ILTIData): string {
-    return jwt.sign(ltiData, JWT_SECRET, { expiresIn: '24h' });
+    return jwt.sign(ltiData, JWT_SECRET, { expiresIn: '1h' });
 }
 
 export function validarTokenLTI(token: string): ILTIData | null {

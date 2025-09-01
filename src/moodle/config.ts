@@ -1,7 +1,7 @@
 // @ts-ignore
 import lti from 'ims-lti'
 import {variables} from '@variables/variables'
-import { ILTIData as LTIData } from '@/types';
+import { errors, ILTIData as LTIData } from '@/types';
 
 interface LTIRequest extends Express.Request {
     body: any;
@@ -70,7 +70,7 @@ export class MoodleConexion {
             outcomeService.send_replace_result(nota, (err: any, result: any) => {
                 if (err) {
                     console.error('Error enviando nota:', err);
-                    return reject(new Error('Error al enviar nota a Moodle'));
+                    return reject(new Error(errors.MOODLE_CALIFICATION_ERROR));
                 }
                 console.log('Nota enviada exitosamente:', result);
                 resolve();
@@ -81,7 +81,7 @@ export class MoodleConexion {
      validarIntegridadDatos(ltiData: LTIData): boolean {
         // Verificar campos obligatorios
         if (!ltiData.user_id || !ltiData.context_id || !ltiData.resource_link_id) {
-            console.error('Faltan campos obligatorios en LTI data');
+            console.error(errors.MOODLE_LTI_MISSING_DATA);
             return false;
         }
 

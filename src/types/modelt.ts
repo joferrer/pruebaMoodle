@@ -6,5 +6,5 @@ export interface ModelResponse {
 }
 
 export interface IAModelI {
-    generateResponse(prompt: string): Promise<ModelResponse>;
+    generateResponse(prompt: string, questionPrompt:string): Promise<ModelResponse>;
 }

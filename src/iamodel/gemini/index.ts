@@ -16,13 +16,13 @@ EJEMPLO DE RESPUESTA:
 `;
 
 export class GeminiModel implements IAModelI {
-    async generateResponse(prompt: string): Promise<ModelResponse> {
+    async generateResponse(prompt: string,questionPrompt:string): Promise<ModelResponse> {
         try {
             const response = await ai.models.generateContent({
                 model: "gemini-2.5-flash",
                 contents: prompt,
                 config: {
-                    systemInstruction: systemPrompt,
+                    systemInstruction: `${systemPrompt}\n\n${questionPrompt}`,
                     thinkingConfig: {
                         thinkingBudget: 0, // Disables thinking
                     },

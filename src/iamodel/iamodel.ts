@@ -12,11 +12,11 @@ abstract class IAModel {
         this.model = model;
     }
 
-    abstract generateResponse(prompt: string): Promise<ModelResponse> ;
+    abstract generateResponse(prompt: string, questionPrompt:string): Promise<ModelResponse> ;
 }
 
 export class CodeReviewModel extends IAModel {
-    override async generateResponse(prompt: string): Promise<ModelResponse> {
-        return this.model.generateResponse(prompt);
+    override async generateResponse(prompt: string,questionPrompt:string): Promise<ModelResponse> {
+        return this.model.generateResponse(prompt,questionPrompt);
     }
 }

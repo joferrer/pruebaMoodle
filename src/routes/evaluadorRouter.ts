@@ -2,12 +2,13 @@ import { Router, Request, Response } from "express";
 import { MoodleConexion } from "@moodle/config"
 import { crearTokenLTI, validarTokenLTI } from "@/helpers/jwt";
 import { ILTIData as LTIData } from "@/types";
-import { GeminiModel , CodeReviewModel} from "@/iamodel";
+import { GeminiModel, CodeReviewModel, getPromptById } from "@/iamodel";
 
 
 export const router = Router()
 
-// Middleware para validar token LTI
+// Middleware para validar token LTI por cookie
+//TODO: Borrar este middleware y usar solo el de body.
 function requireLTI(req: Request, res: Response, next: any) {
     const token = req.cookies.lti_token;
 
@@ -31,26 +32,61 @@ function requireLTI(req: Request, res: Response, next: any) {
     return;
 }
 
-//TODO: Adaptar para que reciba que prueba se lanza.
-//TODO: Hacer que el endpoint reciba que prueba se lanza.
-router.post("/launch", async (req: Request, res) => {
+// Middleware para validar token LTI en el body
+function requireLTIBody(req: Request, res: Response, next: any) {
+    // Buscar el token en el body
+    const token = req.body?.token;
 
+    if (!token) {
+        return res.status(401).json({
+            error: "❌ No hay token LTI en el body"
+        });
+    }
+
+    const ltiData = validarTokenLTI(token);
+
+    if (!ltiData) {
+        return res.status(401).json({
+            error: "❌ Token LTI inválido o expirado"
+        });
+    }
+
+    // Guardar los datos en la request para usarlos en la ruta
+    (req as any).ltiData = ltiData;
+
+    next();
+    return;
+}
+
+
+//TODO: Adaptar para que reciba que prueba se lanza.
+router.post("/launch/:id", async (req: Request, res) => {
+    //TODO: La url va a ser dinámica según la prueba.
+    const url = "https://simulatorchispa.netlify.app/circuit/"
     const moodle = new MoodleConexion();
+
+    const { id } = req.params;
+    console.log(`Lanzando prueba con id: ${id}`);
+    // Aquí se podría validar que el id corresponde a una prueba válida.
+    if (!id) {
+        return res.status(400).send("❌ ID de prueba no proporcionado");
+    }
+
     try {
         await moodle.validarRequest(req);
 
         const ltiData = moodle.extraerDatosLTI(req);
         const token = crearTokenLTI(ltiData);
-
+        //TODO: Las cookies muy probablemente no funcionen si el front y back están en dominios diferentes. Si al final se usa un front separado, eliminar esta línea.
         res.cookie('lti_token', token, {
             httpOnly: true,              // No accesible desde JavaScript del browser
             sameSite: 'strict',          // Protección CSRF
             maxAge: 24 * 60 * 60 * 1000  // 24 horas
         });
-
-        res.redirect("/"); //TODO: Redirigir en base a que prueba se quiere lanzar.
+        //const externalUrl = `https://otro-dominio.com/lti?token=${token}`;
+        return res.redirect(`${url}${encodeURIComponent(id)}?token=${encodeURIComponent(token)}` ); //TODO: Redirigir en base a que prueba se quiere lanzar.
     } catch (err) {
-        res.status(401).send("❌ LTI Launch inválido");
+        return res.status(401).send("❌ LTI Launch inválido");
     }
 
 })
@@ -71,6 +107,7 @@ router.post('/prueba', async (req, res) => {
 
 })
 
+// TODO: Eliminar este endpoint de prueba.
 router.post('/evaluar', requireLTI, async (req: Request, res) => {
 
     try {
@@ -108,11 +145,10 @@ router.post('/evaluar', requireLTI, async (req: Request, res) => {
     }
 })
 
-//TODO: Hacer el endpoint que resiba el código y lo evalúe con el modelo de IA
 //TODO: Definir si se se puede cambiar el modelo de IA a usar.
 router.get('/pruebaModelo', async (_req, res) => {
 
-    
+
     const prompt = `
     #include <iostream>
     using namespace std;
@@ -123,13 +159,77 @@ router.get('/pruebaModelo', async (_req, res) => {
            `
     const modelo = new CodeReviewModel(new GeminiModel())
     try {
-        const response = await modelo.generateResponse(prompt);
+        const response = await modelo.generateResponse(prompt, "");
         return res.json(response);
     } catch (error) {
         console.error('Error al generar respuesta del modelo:', error);
         return res.status(500).json({
             error: "Error al generar respuesta del modelo",
             details: error
+        });
+    }
+})
+
+router.post("/calificar", async (req, res) => {
+    const { codigo, idPrueba } = req.body;
+    if (!codigo || !idPrueba) {
+        return res.status(400).json({
+            error: "Faltan parámetros: codigo e idPrueba son obligatorios"
+        });
+    }
+
+    const prompt = getPromptById(idPrueba);
+    if (!prompt) {
+        return res.status(400).json({
+            error: "ID de prueba no válido"
+        });
+    }
+    const modelo = new CodeReviewModel(new GeminiModel())
+    try {
+        const response = await modelo.generateResponse(codigo, prompt.prompt);
+        return res.json(response);
+    } catch (error) {
+        console.error('Error al generar respuesta del modelo:', error);
+        return res.status(500).json({
+            error: "Error al generar respuesta del modelo",
+            details: error
+        });
+    }
+
+})
+
+router.post('/calificar_moodle', requireLTIBody, async (req: Request, res) => {
+
+    try {
+
+        const ltiData = (req as any).ltiData as LTIData;
+
+        const { nota } = req.body
+        console.log(`${nota}`)
+
+        // Validar integridad de los datos LTI guardados
+        const moodle = new MoodleConexion();
+        if (!moodle.validarIntegridadDatos(ltiData)) {
+            return res.status(400).json({
+                error: "Datos LTI incompletos o inválidos"
+            });
+        }
+
+        await moodle.enviarNota(nota, ltiData);
+        console.log(`Nota ${nota} enviada para usuario ${ltiData.user_id}`);
+
+        return res.json({
+            success: true,
+            message: "Calificación enviada exitosamente",
+            usuario: ltiData.user_name,
+            nota: nota
+        });
+
+    } catch (err) {
+        console.error('Error calificando:', err);
+        return res.status(500).json({
+            error: "Error interno al procesar calificación",
+            err
         });
     }
 })
