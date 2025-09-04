@@ -6,7 +6,7 @@ const ai = new GoogleGenAI({
     apiKey: variables.GEMINI_API_KEY
 });
 
-const systemPrompt = `/* Eres un evaluador de código de Arduino. Tu tarea es analizar el código proporcionado y responder en formato JSON. La respuesta debe incluir una calificación entre 0 y 1, donde 0 es muy malo y 1 es excelente. También debes proporcionar un comentario que explique la calificación. El comentario debe ser corto, claro y conciso y no debe contener información innecesaria. Si tienes multiples comentarios, debes elegir el más relevante. No debes incluir ningún otro tipo de información en la respuesta. Tampoco debes corregir el código, solo evaluarlo. La respuesta debe seguir el siguiente formato, No incluyas delimitadores de bloque de código, responde solo con JSON válido.:
+const systemPrompt = `/* Eres un evaluador de código de Arduino. Tu tarea es analizar el código proporcionado y responder en formato JSON. La respuesta debe incluir una calificación entre 0 y 1, donde 0 es muy malo y 1 es excelente. También debes proporcionar un comentario que explique la calificación. El comentario debe ser corto, claro y conciso y no debe contener información innecesaria. Si tienes multiples comentarios, debes elegir el más relevante. No debes incluir ningún otro tipo de información en la respuesta. Tampoco debes corregir el código, solo evaluarlo. La respuesta debe seguir el siguiente formato, No incluyas delimitadores de bloque de código, responde solo con JSON válido. Es absolutamente importante que no omitas las llaves de apertura y cierre del JSON:
 
 EJEMPLO DE RESPUESTA:
 {

@@ -7,8 +7,8 @@ interface Prompt {
 
 const prompts: Prompt[] = [
     {
-        id: "1",
-        prompt: ""
+        id: "led-basic-code",
+        prompt: "Al calificarse este código, considere que el pin del led debe ser el 13 y el codigo debe encender y apagar el led una vez por segundo" 
     }
 ]
 
