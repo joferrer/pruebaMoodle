@@ -65,7 +65,7 @@ router.post("/launch/:id", async (req: Request, res) => {
 
     const { id } = req.params;
 
-    const url = id.includes("code")  ? "https://evaluador-de-codigo.vercel.app/pruebas/":"https://simulatorchispa.netlify.app/circuit/"
+    const url = id.includes("code") ? "https://evaluador-de-codigo.vercel.app/pruebas/" : "https://simulatorchispa.netlify.app/circuit/"
     const moodle = new MoodleConexion();
 
     console.log(`Lanzando prueba con id: ${id}`);
@@ -86,7 +86,7 @@ router.post("/launch/:id", async (req: Request, res) => {
             maxAge: 24 * 60 * 60 * 1000  // 24 horas
         });
         //const externalUrl = `https://otro-dominio.com/lti?token=${token}`;
-        return res.redirect(`${url}${encodeURIComponent(id)}?token=${encodeURIComponent(token)}` ); //TODO: Redirigir en base a que prueba se quiere lanzar.
+        return res.redirect(`${url}${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`); //TODO: Redirigir en base a que prueba se quiere lanzar.
     } catch (err) {
         return res.status(401).send("❌ LTI Launch inválido");
     }

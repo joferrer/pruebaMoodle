@@ -21,7 +21,9 @@ export class MoodleConexion {
     async validarRequest(req: any): Promise<void> {
         return new Promise((resolve, reject) => {
             this.provider.valid_request(req, (err: any, isValid: boolean) => {
+                
                 if (err || !isValid) {
+                    console.error('Error validando request LTI:', err , isValid);
                     return reject(new Error("Invalid launch request!"));
                 }
                 resolve();
