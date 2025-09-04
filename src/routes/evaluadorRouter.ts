@@ -62,10 +62,12 @@ function requireLTIBody(req: Request, res: Response, next: any) {
 //TODO: Adaptar para que reciba que prueba se lanza.
 router.post("/launch/:id", async (req: Request, res) => {
     //TODO: La url va a ser dinámica según la prueba.
-    const url = "https://simulatorchispa.netlify.app/circuit/"
-    const moodle = new MoodleConexion();
 
     const { id } = req.params;
+
+    const url = id.includes("code")  ? "https://evaluador-de-codigo.vercel.app/pruebas/":"https://simulatorchispa.netlify.app/circuit/"
+    const moodle = new MoodleConexion();
+
     console.log(`Lanzando prueba con id: ${id}`);
     // Aquí se podría validar que el id corresponde a una prueba válida.
     if (!id) {
