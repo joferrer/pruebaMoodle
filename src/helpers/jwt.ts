@@ -17,3 +17,25 @@ export function validarTokenLTI(token: string): ILTIData | null {
         return null;
     }
 }
+
+/**
+ * Determina la duración restante de un token LTI en segundos.
+ * @param token 
+ * @returns segundos restantes o null si no se puede determinar.
+ */
+export function duracionRestanteTokenLTI(token: string): number  {
+    try {
+
+        let tiempoRestante = 0;
+        const decoded = jwt.decode(token) as { exp: number } | null;
+        if (decoded && decoded.exp) {
+            const now = Math.floor(Date.now() / 1000);
+            tiempoRestante = Math.max(decoded.exp - now) ;
+        }
+        return tiempoRestante;
+
+    } catch (error) {
+        console.error('Error al decodificar el token JWT:', error);
+        return -1;
+    }
+}

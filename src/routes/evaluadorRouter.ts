@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { MoodleConexion } from "@moodle/config"
-import { crearTokenLTI, validarTokenLTI } from "@/helpers/jwt";
+import { crearTokenLTI, duracionRestanteTokenLTI, validarTokenLTI } from "@/helpers/jwt";
 import { ILTIData as LTIData } from "@/types";
 import { GeminiModel, CodeReviewModel, getPromptById } from "@/iamodel";
 
@@ -231,6 +231,35 @@ router.post('/calificar_moodle', requireLTIBody, async (req: Request, res) => {
         console.error('Error calificando:', err);
         return res.status(500).json({
             error: "Error interno al procesar calificación",
+            err
+        });
+    }
+})
+
+
+router.post('/tiempo_restante', async (req: Request, res) => {
+    try{
+        const { token } = req.body;
+        if (!token) {
+            return res.status(400).json({
+                error: "Falta el token en el body"
+            });
+        }
+        const tiempoRestante = duracionRestanteTokenLTI(token);
+        if (tiempoRestante < 0) {
+            return res.status(400).json({
+                error: "No se pudo determinar la duración restante del token, es posible que el token sea inválido"
+            });
+        }
+
+        return res.json({
+            tiempoRestante
+        });
+    }
+    catch(err){
+        console.error('Error obteniendo tiempo restante:', err);
+        return res.status(500).json({
+            error: "Error interno al obtener tiempo restante",
             err
         });
     }
