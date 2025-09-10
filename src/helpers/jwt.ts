@@ -30,7 +30,7 @@ export function duracionRestanteTokenLTI(token: string): number  {
         const decoded = jwt.decode(token) as { exp: number } | null;
         if (decoded && decoded.exp) {
             const now = Math.floor(Date.now() / 1000);
-            tiempoRestante = Math.max(decoded.exp - now) ;
+            tiempoRestante = Math.max(0,decoded.exp - now) ;
         }
         return tiempoRestante;
 
