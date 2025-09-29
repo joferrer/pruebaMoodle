@@ -26,7 +26,14 @@ class Server {
 
     middlewares() {
         this.app.use(cors({
-            origin: ["https://evaluador-de-codigo.vercel.app", "https://simulatorchispa.netlify.app", "https://virtualpregrado.ufps.edu.co", "http://localhost:4321"],
+            origin: [ 
+                variables.CHISPA_SIMULATOR_URL,
+                variables.CODE_EVALUATOR_URL,
+                "https://evaluador-de-codigo.vercel.app", 
+                "https://simulatorchispa.netlify.app", 
+                "https://virtualpregrado.ufps.edu.co", 
+                "http://localhost:4321"
+            ],
             credentials: true,
         }));
         this.app.use(express.json());

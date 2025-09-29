@@ -3,7 +3,7 @@ import { MoodleConexion } from "@moodle/config"
 import { crearTokenLTI, duracionRestanteTokenLTI, validarTokenLTI } from "@/helpers/jwt";
 import { ILTIData as LTIData } from "@/types";
 import { GeminiModel, CodeReviewModel, getPromptById } from "@/iamodel";
-
+import { variables } from "@variables/variables";
 
 export const router = Router()
 
@@ -65,7 +65,9 @@ router.post("/launch/:id", async (req: Request, res) => {
 
     const { id } = req.params;
 
-    const url = id.includes("code") ? "https://evaluador-de-codigo.vercel.app/pruebas/" : "https://simulatorchispa.netlify.app/circuit/"
+    const {CHISPA_SIMULATOR_URL, CODE_EVALUATOR_URL} = variables  
+//"https://evaluador-de-codigo.vercel.app/pruebas/" : "https://simulatorchispa.netlify.app/circuit/"
+    const url = id.includes("code") ? CODE_EVALUATOR_URL : CHISPA_SIMULATOR_URL
     const moodle = new MoodleConexion();
 
     console.log(`Lanzando prueba con id: ${id}`);

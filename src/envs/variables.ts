@@ -29,6 +29,8 @@ class EnvManager {
             DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY || '',
             OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
             GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+            CHISPA_SIMULATOR_URL: this.requireEnv('CHISPA_SIMULATOR_URL'),
+            CODE_EVALUATOR_URL: this.requireEnv('CODE_EVALUATOR_URL')
         };
         if (!this.verifyModels()) {
             throw new Error(errors.NO_AI_MODELS_CONFIGURED);

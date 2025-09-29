@@ -8,4 +8,6 @@ export interface EnvVariables {
     GEMINI_API_KEY?: string;
     DEEPSEEK_API_KEY?: string;
     OPENAI_API_KEY?: string; // TODO: Como el modelo puede ser otro, se puede cambiar el nombre de la variable.
+    CHISPA_SIMULATOR_URL: string;
+    CODE_EVALUATOR_URL: string;
 }
