@@ -125,7 +125,7 @@ LTI Launch inválido
 ```
 
 #### Diagrama del flujo para mejor entendimiento.
-![diagrama de lanzamiento de la prueba.](image.png)
+<img width="870" height="572" alt="diagrama de lanzamiento de la prueba" src="https://github.com/user-attachments/assets/29b71c98-0ff5-4f6f-8294-0fbbeb1a3f3b" />
 
 
 ### POST /api/calificar
