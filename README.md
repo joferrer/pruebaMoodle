@@ -6,6 +6,22 @@ Su función principal es ofrecer un servicio POST de lanzamiento (Launch Endpoin
 
 Además, el servidor incorpora un módulo de evaluación automática de código, que utiliza modelos de lenguaje (actualmente Gemini de Google) para analizar y calificar las respuestas enviadas por los estudiantes.
 
+# Índice
+- [💡 Servidor de lanzamiento de pruebas externas para Moodle mediante LTI](#-Servidor-de-lanzamiento-de-pruebas-externas-para-Moodle-mediante-LTI)
+  - [Tecnologías Principales](#Tecnologías-Principales)
+  - [Instalación y configuración](#Instalación-y-configuración)
+    - [Requisitos previos](#Requisitos-previos)
+    - [1. Clonar el repositorio](#1-Clonar-el-repositorio)
+    - [2. Instalar dependencias](#2-Instalar-dependencias)
+    - [3. Configuración de variables de entorno](#3-Configuración-de-variables-de-entorno)
+    - [4. Iniciar proyecto](#4-Iniciar-proyecto)
+  - [Estructura del proyecto](#Estructura-del-proyecto)
+  - [Endpoints](#Endpoints)
+    - [POST /api/launch/{:id}](#POST-apilaunchid)
+    - [POST /api/calificar](#POST-apicalificar)
+    - [POST /api/calificar_moodle](#POST-apicalificar_moodle)
+    - [POST /api/tiempo_restante](#POST-apitiempo_restante)
+
 ## Tecnologías Principales
 
 - Node.js — entorno de ejecución principal.
