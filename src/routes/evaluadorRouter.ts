@@ -78,16 +78,10 @@ router.post("/launch/:id", async (req: Request, res) => {
 
     try {
         await moodle.validarRequest(req);
-
+        
         const ltiData = moodle.extraerDatosLTI(req);
         const token = crearTokenLTI(ltiData);
-        //TODO: Las cookies muy probablemente no funcionen si el front y back están en dominios diferentes. Si al final se usa un front separado, eliminar esta línea.
-        res.cookie('lti_token', token, {
-            httpOnly: true,              // No accesible desde JavaScript del browser
-            sameSite: 'strict',          // Protección CSRF
-            maxAge: 24 * 60 * 60 * 1000  // 24 horas
-        });
-        //const externalUrl = `https://otro-dominio.com/lti?token=${token}`;
+    
         return res.redirect(`${url}${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`); //TODO: Redirigir en base a que prueba se quiere lanzar.
     } catch (err) {
         return res.status(401).send("❌ LTI Launch inválido");

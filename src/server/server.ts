@@ -40,6 +40,7 @@ class Server {
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.static(path.join(__dirname, '../../public')));
 
+        this.app.enable('trust proxy'); // 
         // Middleware para cookies
         this.app.use(cookieParser());
     }
