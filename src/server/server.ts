@@ -29,6 +29,8 @@ class Server {
             origin: [ 
                 variables.CHISPA_SIMULATOR_URL,
                 variables.CODE_EVALUATOR_URL,
+                "https://cursoiot.proyectosufps.duckdns.org",
+                "https://chispacursoiot.proyectosufps.duckdns.org",
                 "https://evaluador-de-codigo.vercel.app", 
                 "https://simulatorchispa.netlify.app", 
                 "https://virtualpregrado.ufps.edu.co", 
