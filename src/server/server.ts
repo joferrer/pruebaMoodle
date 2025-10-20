@@ -27,8 +27,8 @@ class Server {
     middlewares() {
         this.app.use(cors({
             origin: [ 
-                variables.CHISPA_SIMULATOR_URL,
-                variables.CODE_EVALUATOR_URL,
+                variables.CHISPA_SIMULATOR_BASIC_URL,
+                variables.CODE_EVALUATOR_BASIC_URL,
                 "https://cursoiot.proyectosufps.duckdns.org",
                 "https://chispacursoiot.proyectosufps.duckdns.org",
                 "https://evaluador-de-codigo.vercel.app", 
