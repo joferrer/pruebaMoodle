@@ -30,7 +30,9 @@ class EnvManager {
             OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
             GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
             CHISPA_SIMULATOR_URL: this.requireEnv('CHISPA_SIMULATOR_URL'),
-            CODE_EVALUATOR_URL: this.requireEnv('CODE_EVALUATOR_URL')
+            CODE_EVALUATOR_URL: this.requireEnv('CODE_EVALUATOR_URL'),
+            CODE_EVALUATOR_BASIC_URL: this.requireEnv('CODE_EVALUATOR_BASIC_URL'),
+            CHISPA_SIMULATOR_BASIC_URL: this.requireEnv('CHISPA_SIMULATOR_BASIC_URL')
         };
         if (!this.verifyModels()) {
             throw new Error(errors.NO_AI_MODELS_CONFIGURED);

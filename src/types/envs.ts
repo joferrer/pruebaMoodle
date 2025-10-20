@@ -10,4 +10,6 @@ export interface EnvVariables {
     OPENAI_API_KEY?: string; // TODO: Como el modelo puede ser otro, se puede cambiar el nombre de la variable.
     CHISPA_SIMULATOR_URL: string;
     CODE_EVALUATOR_URL: string;
+    CODE_EVALUATOR_BASIC_URL: string;
+    CHISPA_SIMULATOR_BASIC_URL: string;
 }
