@@ -29,6 +29,8 @@ class Server {
             origin: [ 
                 variables.CHISPA_SIMULATOR_URL,
                 variables.CODE_EVALUATOR_URL,
+                "https://cursoiot.proyectosufps.duckdns.org",
+                "https://chispacursoiot.proyectosufps.duckdns.org",
                 "https://evaluador-de-codigo.vercel.app", 
                 "https://simulatorchispa.netlify.app", 
                 "https://virtualpregrado.ufps.edu.co", 
@@ -40,6 +42,7 @@ class Server {
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.static(path.join(__dirname, '../../public')));
 
+        this.app.enable('trust proxy'); // 
         // Middleware para cookies
         this.app.use(cookieParser());
     }
